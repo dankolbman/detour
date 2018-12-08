@@ -6,5 +6,7 @@ until PGPASSWORD=$POSTGRES_PASSWORD psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER"
 done
 
 ./manage.py migrate
+mkdir static
+./manage.py collectstatic --no-input
 
 gunicorn detour.wsgi:application -b 0.0.0.0:5000
