@@ -2,9 +2,9 @@ import datetime
 from detour.api.models import Point
 
 
-def test_get(client, db):
+def test_get(client, trip, db):
     """ Test that points can be retrieved """
-    resp = client.get('/api/points')
+    resp = client.get(f'/api/trips/{trip.id}/points')
     assert resp.status_code == 200
 
 
@@ -16,11 +16,11 @@ def test_create(client, trip, db):
         'lon': 1.32,
         'trip': trip.id
     }
-    resp = client.post('/api/points', point)
+    resp = client.post(f'/api/trips/{trip.id}/points', point)
 
     assert resp.status_code == 201
     assert Point.objects.count() == 1
 
-    resp = client.get(f'/api/points/{resp.json()["id"]}')
+    resp = client.get(f'/api/trips/{trip.id}/points/{resp.json()["id"]}')
     assert resp.json()['lat'] == 0.123
     assert resp.json()['lon'] == 1.32

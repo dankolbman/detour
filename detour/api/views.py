@@ -3,8 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_csv.parsers import CSVParser
 from rest_framework.renderers import JSONRenderer
-from .serializers import PointSerializer
-from .models import Point
+from .serializers import PointSerializer, TripSerializer
+from .models import Point, Trip
 from .negotiation import IgnoreClientContentNegotiation
 
 
@@ -12,8 +12,18 @@ class PointViewSet(viewsets.ModelViewSet):
     """
     Point view
     """
-    queryset = Point.objects.all().order_by('-created_at')
     serializer_class = PointSerializer
+
+    def get_queryset(self):
+        return Point.objects.filter(trip=self.kwargs['trip_pk'])
+
+
+class TripViewSet(viewsets.ModelViewSet):
+    """
+    Point view
+    """
+    queryset = Trip.objects.all().order_by('-created_at')
+    serializer_class = TripSerializer
 
 
 class UploadView(APIView):
