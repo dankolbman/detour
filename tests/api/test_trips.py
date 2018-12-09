@@ -36,3 +36,26 @@ def test_create_with_points(client, trip, db):
 
     resp = client.get(f'/api/trips/{trip.id}')
     assert resp.json()['points'].endswith(f'/api/trips/{trip.id}/points')
+
+
+def test_linestring(client, trip, db):
+    """ Test that linestring geojson is returned correctly """
+    expected = {
+       "type": "LineString",
+       "coordinates": [
+           [100.0, 0.0], [101.0, 1.0]
+       ]
+    }
+
+    for _ in range(20):
+        point = {
+            'lat': 1.11,
+            'lon': 2.22,
+            'trip': trip.id
+        }
+        resp = client.post(f'/api/trips/{trip.id}/points', point)
+
+    resp = client.get(f'/api/trips/{trip.id}/linestring')
+    assert resp.status_code == 200
+    assert resp.json()['type'] == 'LineString'
+    assert len(resp.json()['coordinates']) == 20

@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_csv.parsers import CSVParser
@@ -24,6 +25,19 @@ class TripViewSet(viewsets.ModelViewSet):
     """
     queryset = Trip.objects.all().order_by('-created_at')
     serializer_class = TripSerializer
+
+    @action(methods=['GET'], detail=True)
+    def linestring(self, request, pk=None):
+        """ Return a GeoJSON linestring of this trip """
+        trip = Trip.objects.get(pk=pk)
+        points = (trip.points.values('lat', 'lon')
+                      .all()
+                      .order_by('time'))
+
+        return Response({
+           "type": "LineString",
+           "coordinates": points.values_list('lon', 'lat')
+        })
 
 
 class UploadView(APIView):
