@@ -10,7 +10,8 @@ router.register(r'points', views.PointViewSet)
 
 urlpatterns = [
     url(r'^api/', include(router.urls)),
-    path('remote.php/webdav/<int:trip_id>/<str:pk>', views.point_upload),
+    path('remote.php/webdav/<int:trip_id>/<str:pk>',
+         views.UploadView.as_view()),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

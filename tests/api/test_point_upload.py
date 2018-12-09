@@ -21,7 +21,7 @@ def points(n):
 def test_upload_csv(client, user, trip, db):
     data = points(100)
     resp = client.put(f'/remote.php/webdav/{trip.id}/20181205180216.csv',
-                      content_type='text/csv',
+                      content_type='text/octet-stream',
                       data=data)
 
     assert resp.status_code == 201
