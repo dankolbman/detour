@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+from django.urls import path
 from django.contrib import admin
 from rest_framework import routers
 from .api import views
@@ -7,12 +8,9 @@ from .api.routers import PathRouter
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'points', views.PointViewSet)
 
-p_router = PathRouter()
-p_router.register(r'webdav', views.BulkPointViewSet)
-
 urlpatterns = [
     url(r'^api/', include(router.urls)),
-    url(r'^remote.php/', include(p_router.urls)),
+    path('remote.php/webdav/<int:trip_id>/<str:pk>', views.point_upload),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

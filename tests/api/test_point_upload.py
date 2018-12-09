@@ -1,7 +1,7 @@
 import pytest
 import datetime
 import random
-from detour.api.models import Point
+from detour.api.models import Point, Trip
 
 
 def points(n):
@@ -18,10 +18,11 @@ def points(n):
     return header + '\n' + ''.join(body)
 
 
-def test_upload_csv(client, db):
+def test_upload_csv(client, user, trip, db):
     data = points(100)
-    resp = client.put('/remote.php/webdav/points/20181205180216.csv',
+    resp = client.put(f'/remote.php/webdav/{trip.id}/20181205180216.csv',
                       content_type='text/csv',
                       data=data)
 
+    assert resp.status_code == 201
     assert Point.objects.count() == 100

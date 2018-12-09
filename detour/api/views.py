@@ -1,8 +1,12 @@
-import csv
 from rest_framework import viewsets
+from rest_framework.decorators import (
+    api_view,
+    renderer_classes,
+    parser_classes
+)
 from rest_framework.response import Response
-from rest_framework.decorators import action
 from rest_framework_csv.parsers import CSVParser
+from rest_framework.renderers import JSONRenderer
 from .serializers import PointSerializer
 from .models import Point
 
@@ -15,23 +19,24 @@ class PointViewSet(viewsets.ModelViewSet):
     serializer_class = PointSerializer
 
 
-class BulkPointViewSet(viewsets.ModelViewSet):
+@api_view(['PUT'])
+@renderer_classes((JSONRenderer,))
+@parser_classes((CSVParser,))
+def point_upload(request, pk=None, trip_id=None):
     """
-    View for uploading a csv file containing points
+    Receives a csv file containing point data and inserts into database.
     """
-    queryset = Point.objects.all().order_by('-created_at')
-    serializer_class = PointSerializer
-    parser_classes = (CSVParser,)
+    points = []
+    for point in request.data:
+        point['trip'] = trip_id
+        points.append(point)
 
-    @action(detail=True, methods=['put'], name='Upload')
-    def points(self, request, pk=None):
-        """
-        Receives a csv file containing point data and inserts into database.
-        """
-        serializer = self.get_serializer(data=request.data, many=True)
-        valid = serializer.is_valid()
-        if valid:
-            serializer.save()
-            return Response({'message': f'Added {len(serializer.data)} points'})
-        else:
-            return Response(serializer.errors, 400)
+    serializer = PointSerializer(data=points, many=True)
+    valid = serializer.is_valid()
+
+    if valid:
+        serializer.save()
+        return Response({'message': f'Added {len(serializer.data)} points'},
+                        201)
+    else:
+        return Response(serializer.errors, 400)

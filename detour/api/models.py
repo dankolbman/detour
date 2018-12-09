@@ -15,14 +15,15 @@ class Trip(models.Model):
 class Point(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE,
+                             related_name='points')
 
     time = models.DateTimeField(auto_now_add=True)
     lat = models.FloatField()
     lon = models.FloatField()
     elevation = models.FloatField(blank=True, null=True)
     accuracy = models.FloatField(blank=True, null=True)
-    speed = models.FloatField(blank=True, null=True)
+    speed = models.FloatField(default=0, blank=True, null=True)
     satellites = models.IntegerField(blank=True, null=True)
     provider = models.CharField(blank=True, null=True, max_length=100)
     activity = models.CharField(blank=True, null=True, max_length=100)

@@ -7,13 +7,15 @@ def test_get(client, db):
     assert resp.status_code == 200
 
 
-def test_create(client, db):
+def test_create(client, trip, db):
     """ Test that points can be added """
     point = {
         'lat': 0.123,
         'lon': 1.32,
+        'trip': trip.id
     }
     resp = client.post('/api/points', point)
+
     assert resp.status_code == 201
     assert Point.objects.count() == 1
 
