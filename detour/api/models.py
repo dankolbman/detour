@@ -18,7 +18,7 @@ class Point(models.Model):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE,
                              related_name='points')
 
-    time = models.DateTimeField(auto_now_add=True)
+    time = models.DateTimeField()
     lat = models.FloatField()
     lon = models.FloatField()
     elevation = models.FloatField(blank=True, null=True)

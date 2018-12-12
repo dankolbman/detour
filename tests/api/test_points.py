@@ -1,3 +1,4 @@
+import datetime
 from detour.api.models import Point
 
 
@@ -10,6 +11,7 @@ def test_get(client, db):
 def test_create(client, trip, db):
     """ Test that points can be added """
     point = {
+        'time': datetime.datetime.now().isoformat(),
         'lat': 0.123,
         'lon': 1.32,
         'trip': trip.id
