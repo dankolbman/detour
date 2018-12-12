@@ -26,17 +26,17 @@ class UploadView(APIView):
         """
         Receives a csv file containing point data and inserts into database.
         """
-        points = []
+        success = 0
+        errors = []
         for point in request.data:
             point['trip'] = trip_id
-            points.append(point)
+            serializer = self.serializer_class(data=point, many=False)
+            if serializer.is_valid():
+                serializer.save()
+                success += 1
+            else:
+                errors.append(serializer.errors)
 
-        serializer = self.serializer_class(data=points, many=True)
-        valid = serializer.is_valid()
-
-        if valid:
-            serializer.save()
-            return Response({'message': f'Added {len(serializer.data)} points'},
-                            201)
-        else:
-            return Response(serializer.errors, 400)
+        return Response({'message': f'Added {success} points',
+                         'errors': errors},
+                        201)
