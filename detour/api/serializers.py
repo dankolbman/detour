@@ -9,11 +9,16 @@ class TripSerializer(serializers.HyperlinkedModelSerializer):
         view_name='trip-points-list',
         lookup_url_kwarg='trip_pk'
     )
+    linestring = serializers.HyperlinkedIdentityField(
+        view_name='trip-linestring',
+        lookup_url_kwarg='pk'
+    )
     owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Trip
-        fields = ('id', 'created_at', 'name', 'owner', 'description', 'points')
+        fields = ('id', 'created_at', 'name', 'owner', 'description', 'points',
+                  'linestring')
 
 
 
