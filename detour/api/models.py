@@ -23,7 +23,7 @@ class Point(models.Model):
     lon = models.FloatField()
     elevation = models.FloatField(blank=True, null=True)
     accuracy = models.FloatField(blank=True, null=True)
-    speed = models.FloatField(default=0, blank=True, null=True)
+    speed = models.FloatField(blank=True, null=True)
     satellites = models.IntegerField(blank=True, null=True)
     provider = models.CharField(blank=True, null=True, max_length=100)
     activity = models.CharField(blank=True, null=True, max_length=100)
