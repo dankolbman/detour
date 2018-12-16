@@ -39,6 +39,20 @@ class TripViewSet(viewsets.ModelViewSet):
            "coordinates": points.values_list('lon', 'lat')
         })
 
+    @action(methods=['GET'], detail=True)
+    def speed(self, request, pk=None):
+        """ Returns speed as a function of time """
+        trip = Trip.objects.get(pk=pk)
+        points = (trip.points.values('time', 'speed')
+                      .all()
+                      .order_by('time'))
+
+        speed = [[int(v[0].timestamp()), v[1]*60*60/1000]
+                 for v in points.values_list('time', 'speed')]
+        return Response({
+            'speed': speed
+        }, 200)
+
 
 class UploadView(APIView):
     serializer_class = PointSerializer
