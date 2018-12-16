@@ -17,12 +17,16 @@ class TripSerializer(serializers.HyperlinkedModelSerializer):
         view_name='trip-speed',
         lookup_url_kwarg='pk'
     )
+    annotations = serializers.HyperlinkedIdentityField(
+        view_name='trip-annotations',
+        lookup_url_kwarg='pk'
+    )
     owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Trip
         fields = ('id', 'created_at', 'name', 'owner', 'description', 'points',
-                  'linestring', 'speed')
+                  'linestring', 'speed', 'annotations')
 
 
 

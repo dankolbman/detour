@@ -53,6 +53,20 @@ class TripViewSet(viewsets.ModelViewSet):
             'speed': speed
         }, 200)
 
+    @action(methods=['GET'], detail=True)
+    def annotations(self, request, pk=None):
+        """ Returns annotation points """
+        trip = Trip.objects.get(pk=pk)
+        points = (trip.points
+                      .filter(annotation__isnull=False)
+                      .exclude(annotation__exact='')
+                      .all()
+                      .order_by('time'))
+
+        return Response({
+            'annotations': points.values_list('time', 'lat', 'lon', 'annotation')
+        }, 200)
+
 
 class UploadView(APIView):
     serializer_class = PointSerializer
