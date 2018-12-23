@@ -28,7 +28,8 @@ def test_create_with_points(client, trip, db):
     point = {
         'lat': 0.123,
         'lon': 1.32,
-        'trip': trip.id
+        'trip': trip.id,
+        'time': '2019-01-01T00:00',
     }
     resp = client.post(f'/api/trips/{trip.id}/points', point)
     assert resp.status_code == 201
@@ -47,11 +48,12 @@ def test_linestring(client, trip, db):
        ]
     }
 
-    for _ in range(20):
+    for i in range(20):
         point = {
             'lat': 1.11,
             'lon': 2.22,
-            'trip': trip.id
+            'trip': trip.id,
+            'time': f'2019-01-01T{i:02d}:00',
         }
         resp = client.post(f'/api/trips/{trip.id}/points', point)
 
