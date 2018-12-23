@@ -1,4 +1,4 @@
-FROM python:3.7-alpine
+FROM python:3.7-alpine AS base
 
 WORKDIR /usr/src/app
 
@@ -18,3 +18,8 @@ COPY . .
 EXPOSE 5000
 
 CMD [ "bin/entrypoint.sh" ]
+
+
+FROM base AS dev_reqs
+
+RUN pip install --no-cache-dir -r dev-requirements.txt
