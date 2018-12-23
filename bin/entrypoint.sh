@@ -9,4 +9,8 @@ done
 mkdir static
 ./manage.py collectstatic --no-input
 
-gunicorn detour.wsgi:application -b 0.0.0.0:5000
+if [[ "$DJANGO_SETTINGS_MODULE" = "detour.settings.development" ]]; then
+    ./manage.py runserver 0.0.0.0:5000;
+else
+    gunicorn detour.wsgi:application -b 0.0.0.0:5000;
+fi
