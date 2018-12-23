@@ -20,9 +20,9 @@ def points(n):
     return header() + '\n' + ''.join(body)
 
 
-def test_upload_csv(client, user, trip, db):
+def test_upload_csv(admin_client, user, trip, db):
     data = points(100)
-    resp = client.put(f'/remote.php/webdav/{trip.id}/20181205180216.csv',
+    resp = admin_client.put(f'/remote.php/webdav/{trip.id}/20181205180216.csv',
                       content_type='text/octet-stream',
                       data=data)
 
@@ -30,7 +30,7 @@ def test_upload_csv(client, user, trip, db):
     assert Point.objects.count() == 100
 
 
-def test_upload_invalid(client, user, trip, db):
+def test_upload_invalid(admin_client, user, trip, db):
     data = points(100)
     # Add invalid point
     l = data.split('\n')[2].split(',')
@@ -38,7 +38,7 @@ def test_upload_invalid(client, user, trip, db):
     l = ','.join(l)
     data += l
 
-    resp = client.put(f'/remote.php/webdav/{trip.id}/20181205180216.csv',
+    resp = admin_client.put(f'/remote.php/webdav/{trip.id}/20181205180216.csv',
                       content_type='text/octet-stream',
                       data=data)
 
@@ -48,16 +48,16 @@ def test_upload_invalid(client, user, trip, db):
     assert resp.json()['message'] == 'Added 100 points'
 
 
-def test_no_dupes(client, user, trip, db):
+def test_no_dupes(admin_client, user, trip, db):
     """ Test that points are not created more than once """
     data = points(10)
-    resp = client.put(f'/remote.php/webdav/{trip.id}/20181205180216.csv',
+    resp = admin_client.put(f'/remote.php/webdav/{trip.id}/20181205180216.csv',
                       content_type='text/octet-stream',
                       data=data)
     assert resp.status_code == 201
     assert Point.objects.count() == 10
 
-    resp = client.put(f'/remote.php/webdav/{trip.id}/20181205180216.csv',
+    resp = admin_client.put(f'/remote.php/webdav/{trip.id}/20181205180216.csv',
                       content_type='text/octet-stream',
                       data=data)
     assert resp.status_code == 201
