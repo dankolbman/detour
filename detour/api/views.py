@@ -5,10 +5,14 @@ from rest_framework.response import Response
 from rest_framework_csv.parsers import CSVParser
 from rest_framework.renderers import JSONRenderer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from itertools import accumulate
+from haversine import haversine
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PointSerializer, TripSerializer
 from .models import Point, Trip
 from .negotiation import IgnoreClientContentNegotiation
+
+import time
 
 
 class PointViewSet(viewsets.ModelViewSet):
@@ -41,6 +45,34 @@ class TripViewSet(viewsets.ModelViewSet):
         return Response({
            "type": "LineString",
            "coordinates": points.values_list('lon', 'lat')
+        })
+
+    @action(methods=['GET'], detail=True)
+    def distance(self, request, pk=None):
+        """ Return cumulative distance as a function of time """
+        trip = Trip.objects.get(pk=pk)
+        points = (trip.points.values('lat', 'lon', 'time')
+                      .all()
+                      .order_by('time'))
+        def dist(p1, p2):
+            return haversine((p1['lat'], p1['lon']), (p2['lat'], p2['lon']))
+
+        distances = []
+        dr = 0
+        for i in range(len(points)-1):
+            d = dist(points[i+1], points[i])
+            if d > 0.5:
+                continue
+            dr += d
+            if i % 100 != 0:
+                continue
+            distances.append({
+                'time': int(points[i]['time'].timestamp()),
+                'distance': dr,
+            })
+
+        return Response({
+            'distance': distances
         })
 
     @action(methods=['GET'], detail=True)
