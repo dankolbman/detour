@@ -1,4 +1,4 @@
-from detour.api.models import Trip
+from detour.api.models import Trip, Point
 
 
 def test_get(admin_client, db):
@@ -37,6 +37,29 @@ def test_create_with_points(admin_client, trip, db):
 
     resp = admin_client.get(f'/api/trips/{trip.id}')
     assert resp.json()['points'].endswith(f'/api/trips/{trip.id}/points')
+
+
+def test_filter(client, trip, db):
+    """ Test that annotations may be filtered """
+    point = {
+        'lat': 0.123,
+        'lon': 1.32,
+        'trip': trip,
+        'time': '2019-01-01T00:00',
+        'annotation': 'this is a point'
+    }
+    p = Point.objects.create(**point)
+    p.save()
+
+    point['annotation'] = 'new annotation with keyword'
+    point['lat'] = 2.00
+    p = Point.objects.create(**point)
+    p.save()
+
+    resp = client.get(f'/api/trips/{trip.id}/points?search=keyword')
+    assert resp.status_code == 200
+    assert resp.json()['count'] == 1
+    assert resp.json()['results'][0]['annotation'] == point['annotation']
 
 
 def test_linestring(admin_client, trip, db):

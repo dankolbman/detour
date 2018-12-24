@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,8 +12,6 @@ from .serializers import PointSerializer, TripSerializer
 from .models import Point, Trip
 from .negotiation import IgnoreClientContentNegotiation
 
-import time
-
 
 class PointViewSet(viewsets.ModelViewSet):
     """
@@ -21,6 +19,8 @@ class PointViewSet(viewsets.ModelViewSet):
     """
     serializer_class = PointSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('annotation',)
 
     def get_queryset(self):
         return Point.objects.filter(trip=self.kwargs['trip_pk'])
