@@ -1,3 +1,7 @@
+# Detour
+
+A simple Django app for storing and providing GPS traces for crazy adventures.
+
 ## Developing
 
 Start up detour with docker-compose:
