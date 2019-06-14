@@ -1,5 +1,5 @@
-Django==2.1.4
-djangorestframework==3.9.0
+Django==2.1.9
+djangorestframework==3.9.1
 djangorestframework-csv==2.1.0
 django-filter==2.0.0
 Markdown==3.0.1
