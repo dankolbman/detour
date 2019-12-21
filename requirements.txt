@@ -7,3 +7,4 @@ psycopg2==2.7.6.1
 gunicorn==19.9.0
 drf-nested-routers==0.91
 haversine==2.0.0
+factory-boy==2.12.0
