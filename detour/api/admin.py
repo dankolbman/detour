@@ -4,7 +4,11 @@ from .models import Trip, Point
 
 admin.site.register(Point)
 
+
 class TripAdmin(admin.ModelAdmin):
-    list_display = ('owner', 'name', 'created_at')
+    list_display = ('id', 'visible', 'owner', 'name', 'created_at')
+    list_display_links = ('id', 'name')
+    list_editable = ('visible',)
+
 
 admin.site.register(Trip, TripAdmin)
