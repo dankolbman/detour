@@ -35,3 +35,6 @@ class TripNode(DjangoObjectType):
 class Query(ObjectType):
     trip = relay.Node.Field(TripNode)
     trips = DjangoFilterConnectionField(TripNode)
+
+    def resolve_trips(self, *args, **kwargs):
+        return Trip.objects.filter(visible=True).all()
