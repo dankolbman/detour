@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,8 @@ REST_FRAMEWORK = {
 	'rest_framework.authentication.SessionAuthentication',
     ),
 }
+
+GRAPHENE = {
+    'SCHEMA': 'detour.graphql.schema.schema'
+}
+

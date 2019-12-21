@@ -2,6 +2,7 @@ from django.conf.urls import url, include
 from django.urls import path
 from django.contrib import admin
 from rest_framework_nested import routers
+from graphene_django.views import GraphQLView
 from .api import views
 from .api.routers import PathRouter
 
@@ -17,5 +18,6 @@ urlpatterns = [
     path('remote.php/webdav/<int:trip_id>/<str:pk>',
          views.UploadView.as_view()),
     url(r'^admin/', admin.site.urls),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'graphql', GraphQLView.as_view(graphiql=True)),
 ]
