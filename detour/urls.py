@@ -1,6 +1,7 @@
 from django.conf.urls import url, include
 from django.urls import path
 from django.contrib import admin
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework_nested import routers
 from graphene_django.views import GraphQLView
 from .api import views
@@ -19,5 +20,5 @@ urlpatterns = [
          views.UploadView.as_view()),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'graphql', GraphQLView.as_view(graphiql=True)),
+    url(r'graphql', csrf_exempt(GraphQLView.as_view(graphiql=True))),
 ]
