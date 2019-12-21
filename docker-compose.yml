@@ -18,7 +18,5 @@ services:
       - '5000:5000'
   postgres:
     image: postgres:11.6
-    ports:
-      - '5432:5444'
     environment:
       - POSTGRES_DB=detour
