@@ -51,25 +51,7 @@ class TripViewSet(viewsets.ModelViewSet):
     def distance(self, request, pk=None):
         """ Return cumulative distance as a function of time """
         trip = Trip.objects.get(pk=pk)
-        points = (trip.points.values('lat', 'lon', 'time')
-                      .all()
-                      .order_by('time'))
-        def dist(p1, p2):
-            return haversine((p1['lat'], p1['lon']), (p2['lat'], p2['lon']))
-
-        distances = []
-        dr = 0
-        for i in range(len(points)-1):
-            d = dist(points[i+1], points[i])
-            if d > 0.5:
-                continue
-            dr += d
-            if i % 100 != 0:
-                continue
-            distances.append({
-                'time': int(points[i]['time'].timestamp()),
-                'distance': dr,
-            })
+        distances = trip.distance()
 
         return Response({
             'distance': distances

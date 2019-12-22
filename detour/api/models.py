@@ -1,3 +1,5 @@
+from haversine import haversine
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -11,13 +13,37 @@ class Trip(models.Model):
     visible = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.name}'
+        return f"{self.name}"
+
+    def distance(self, resolution=100):
+        """ Return cumulative distance as a function of time """
+        points = self.points.values("lat", "lon", "time").all().order_by("time")
+
+        def dist(p1, p2):
+            return haversine((p1["lat"], p1["lon"]), (p2["lat"], p2["lon"]))
+
+        distances = []
+        dr = 0
+        for i in range(len(points) - 1):
+            d = dist(points[i + 1], points[i])
+            # if d > 0.5:
+            #     continue
+            dr += d
+            if i % resolution != 0:
+                continue
+            distances.append(
+                {"time": points[i]["time"], "distance": dr}
+            )
+
+        return distances
+
 
 class Point(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE,
-                             related_name='points')
+    trip = models.ForeignKey(
+        Trip, on_delete=models.CASCADE, related_name="points"
+    )
 
     time = models.DateTimeField()
     lat = models.FloatField()
@@ -32,4 +58,4 @@ class Point(models.Model):
     annotation = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f'<Point {self.lat} {self.lon}>'
+        return f"<Point {self.lat} {self.lon}>"
