@@ -7,6 +7,9 @@ RUN apk update \
         postgresql-dev \
         postgresql-client \
         gcc \
+        zlib-dev \
+        jpeg-dev \
+        libjpeg \
         python3-dev \
         musl-dev
 

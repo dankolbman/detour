@@ -11,6 +11,10 @@ class Trip(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     visible = models.BooleanField(default=False)
+    order = models.PositiveIntegerField(default=100)
+    icon = models.ImageField(
+        upload_to="uploads/", max_length=100, blank=True
+    )
 
     def __str__(self):
         return f"{self.name}"
@@ -31,9 +35,7 @@ class Trip(models.Model):
             dr += d
             if i % resolution != 0:
                 continue
-            distances.append(
-                {"time": points[i]["time"], "distance": dr}
-            )
+            distances.append({"time": points[i]["time"], "distance": dr})
 
         return distances
 
