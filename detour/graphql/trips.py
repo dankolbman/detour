@@ -1,4 +1,4 @@
-from graphene import relay, ObjectType, Field, List, String, Int
+from graphene import relay, ObjectType, Field, List, String, Float
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 
@@ -7,7 +7,7 @@ from detour.api.models import Trip
 
 class Geometry(ObjectType):
     type = String(default_value="LineString")
-    coordinates = List(List(Int))
+    coordinates = List(List(Float))
 
 
 class GeoJSON(ObjectType):
