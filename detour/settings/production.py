@@ -26,7 +26,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY', str(uuid.uuid4()))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["dankolbman.xyz", "localhost"]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+
+if len(ALLOWED_HOSTS) == 0:
+    ALLOWED_HOSTS = ["dankolbman.xyz", "api.dankolbman.xyz"]
 
 CORS_ORIGIN_ALLOW_ALL = True
 
