@@ -12,16 +12,16 @@ class Trip(models.Model):
     description = models.TextField()
     visible = models.BooleanField(default=False)
     order = models.PositiveIntegerField(default=100)
-    icon = models.ImageField(
-        upload_to="uploads/", max_length=100, blank=True
-    )
+    icon = models.ImageField(upload_to="uploads/", max_length=100, blank=True)
 
     def __str__(self):
         return f"{self.name}"
 
     def distance(self, resolution=100):
         """ Return cumulative distance as a function of time """
-        points = self.points.values("lat", "lon", "time").all().order_by("time")
+        points = (
+            self.points.values("lat", "lon", "time").all().order_by("time")
+        )
 
         def dist(p1, p2):
             return haversine((p1["lat"], p1["lon"]), (p2["lat"], p2["lon"]))
@@ -61,3 +61,16 @@ class Point(models.Model):
 
     def __str__(self):
         return f"<Point {self.lat} {self.lon}>"
+
+
+class Post(models.Model):
+    id = models.AutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    trip = models.ForeignKey(
+        Trip, on_delete=models.CASCADE, related_name="posts"
+    )
+
+    author = models.CharField(max_length=512, blank=True, null=True)
+    content = models.TextField(blank=True, null=True)
+    lat = models.FloatField()
+    lon = models.FloatField()
