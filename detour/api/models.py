@@ -72,5 +72,6 @@ class Post(models.Model):
 
     author = models.CharField(max_length=512, blank=True, null=True)
     content = models.TextField(blank=True, null=True)
+    time = models.DateTimeField()
     lat = models.FloatField()
     lon = models.FloatField()
