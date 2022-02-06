@@ -23,7 +23,7 @@ class GeoJSON(ObjectType):
 class TripNode(DjangoObjectType):
     class Meta:
         model = Trip
-        filter_fields = ["name"]
+        filter_fields = ["id", "name", "slug"]
         interfaces = (relay.Node,)
 
     geoJSON = Field(GeoJSON)

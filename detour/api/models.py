@@ -1,3 +1,4 @@
+from datetime import datetime
 from haversine import haversine
 
 from django.contrib.auth.models import User
@@ -8,11 +9,40 @@ class Trip(models.Model):
     id = models.AutoField(primary_key=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    visible = models.BooleanField(default=False)
+    slug = models.SlugField(
+        max_length=100,
+        default="name",
+        help_text="Used for identification of the trip",
+    )
+    name = models.CharField(max_length=100, help_text="A short title for the trip")
+    description = models.TextField(help_text="A short blurb about the trip")
+    visible = models.BooleanField(
+        default=False,
+        help_text="Whether to show the trip on the site or not",
+    )
     order = models.PositiveIntegerField(default=100)
     icon = models.ImageField(upload_to="uploads/", max_length=100, blank=True)
+
+    location = models.CharField(
+        max_length=1024,
+        default="The world",
+        help_text="Where the trip occurred geographically",
+    )
+    trip_time = models.CharField(
+        help_text="A textual description of when the trip occurred such as 'spring 2029'",
+        max_length=256,
+        blank=True,
+    )
+    trip_start = models.DateTimeField(
+        help_text="When the trip started",
+        null=False,
+        default=datetime.utcnow,
+    )
+    trip_end = models.DateTimeField(
+        help_text="When the trip ended",
+        null=False,
+        default=datetime.utcnow,
+    )
 
     def __str__(self):
         return f"{self.name}"
