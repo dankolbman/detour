@@ -2,9 +2,6 @@ from django.contrib import admin
 from .models import Trip, Point, Post
 
 
-admin.site.register(Point)
-
-
 class TripAdmin(admin.ModelAdmin):
     list_display = ("id", "visible", "order", "owner", "name", "created_at")
     list_display_links = ("id", "name")
@@ -20,3 +17,12 @@ class PostAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Post, PostAdmin)
+
+
+class PointAdmin(admin.ModelAdmin):
+    list_display = ("id", "trip", "created_at", "lat", "lon")
+    list_display_links = ("id",)
+    list_filter = ("trip", "time")
+
+
+admin.site.register(Point, PointAdmin)
