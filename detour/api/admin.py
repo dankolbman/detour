@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Trip, Point, Post
+from .models import Trip, Memory, Point, Post
 
 
 class TripAdmin(admin.ModelAdmin):
@@ -26,3 +26,12 @@ class PointAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Point, PointAdmin)
+
+
+class MemoryAdmin(admin.ModelAdmin):
+    list_display = ("title", "trip", "location", "owner", "time")
+    list_display_links = ("title",)
+    list_filter = ("trip", "owner")
+
+
+admin.site.register(Memory, MemoryAdmin)
