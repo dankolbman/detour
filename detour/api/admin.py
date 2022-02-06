@@ -1,4 +1,5 @@
 from django.contrib import admin
+from import_export.admin import ImportExportActionModelAdmin
 from .models import Trip, Memory, Point, Post
 
 
@@ -19,7 +20,7 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(Post, PostAdmin)
 
 
-class PointAdmin(admin.ModelAdmin):
+class PointAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     list_display = ("id", "trip", "created_at", "lat", "lon")
     list_display_links = ("id",)
     list_filter = ("trip", "time")
