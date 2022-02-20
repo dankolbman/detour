@@ -3,6 +3,7 @@ from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 
 from detour.api.models import Trip
+from detour.graphql.memories import MemoryNode, MemoryFilter
 
 
 class TimePoint(ObjectType):
@@ -26,6 +27,7 @@ class TripNode(DjangoObjectType):
         filter_fields = ["id", "name", "slug"]
         interfaces = (relay.Node,)
 
+    memories = DjangoFilterConnectionField(MemoryNode, filterset_class=MemoryFilter)
     geoJSON = Field(GeoJSON)
     distance = List(TimePoint)
 

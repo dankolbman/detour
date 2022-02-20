@@ -1,9 +1,23 @@
-from graphene import relay, ObjectType
+from django_filters import FilterSet, OrderingFilter
+from graphene import relay, ObjectType, String
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from graphql_relay import from_global_id
 
 from detour.api.models import Memory
+
+
+class MemoryFilter(FilterSet):
+    class Meta:
+        model = Memory
+        fields = ("trip", "time")
+
+    order_by = OrderingFilter(
+        fields=(
+            "created_at",
+            "time",
+        )
+    )
 
 
 class MemoryNode(DjangoObjectType):
