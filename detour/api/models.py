@@ -48,10 +48,8 @@ class Trip(models.Model):
         return f"{self.name}"
 
     def distance(self, resolution=100):
-        """ Return cumulative distance as a function of time """
-        points = (
-            self.points.values("lat", "lon", "time").all().order_by("time")
-        )
+        """Return cumulative distance as a function of time"""
+        points = self.points.values("lat", "lon", "time").all().order_by("time")
 
         def dist(p1, p2):
             return haversine((p1["lat"], p1["lon"]), (p2["lat"], p2["lon"]))
@@ -73,9 +71,7 @@ class Trip(models.Model):
 class Point(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    trip = models.ForeignKey(
-        Trip, on_delete=models.CASCADE, related_name="points"
-    )
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="points")
 
     time = models.DateTimeField()
     lat = models.FloatField()
