@@ -35,9 +35,12 @@ class TripNode(DjangoObjectType):
 
         coordinates = self.points.values("lat", "lon").order_by("time").all()
 
-        return GeoJSON(
-            geometry=Geometry(coordinates=coordinates.values_list("lon", "lat"))
-        )
+        coords = [
+            p
+            for i, p in enumerate(coordinates.values_list("lon", "lat"))
+            if i % 10 == 0
+        ]
+        return GeoJSON(geometry=Geometry(coordinates=coords))
 
     def resolve_distance(self, info, **kwargs):
         distances = self.distance(resolution=100)
