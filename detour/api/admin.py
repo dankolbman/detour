@@ -29,7 +29,7 @@ class PointAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 admin.site.register(Point, PointAdmin)
 
 
-class MemoryAdmin(admin.ModelAdmin):
+class MemoryAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     list_display = ("title", "trip", "location", "owner", "time")
     list_display_links = ("title",)
     list_filter = ("trip", "owner")
